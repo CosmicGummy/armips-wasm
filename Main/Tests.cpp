@@ -6,6 +6,7 @@
 #include "Util/ByteArray.h"
 
 #include <cstring>
+#include <system_error>
 
 namespace
 {
@@ -46,12 +47,24 @@ std::vector<fs::path> TestRunner::getTestsList(const fs::path& dir)
 {
 	std::vector<fs::path> tests;
 
-	for(auto &entry : fs::directory_iterator(dir))
-	{
-		if (!entry.is_directory())
-			continue;
+	#ifdef WASI
+		std::error_code errorCode;
+		auto iter = fs::directory_iterator(dir, errorCode);
+		for (auto &&entry = begin(iter); entry != end(iter); entry = iter.increment(errorCode))
+		{
+			if (!entry->is_directory(errorCode))
+				continue;
 
-		const auto &path = entry.path();
+			const auto &path = entry->path();
+	#else
+		for(auto &entry : fs::directory_iterator(dir))
+		{
+			if (!entry.is_directory())
+				continue;
+
+			const auto &path = entry.path();
+	#endif		
+	
 		fs::path fileName = path / (path.filename().u8string() + ".asm");
 
 		if (fs::exists(fileName))

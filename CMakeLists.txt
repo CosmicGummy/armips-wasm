@@ -55,6 +55,12 @@ function(init_target TARGET_NAME)
 			set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS "-municode")
 		endif()
 	endif()
+
+	if (WASI)
+		target_compile_definitions(${TARGET_NAME} PRIVATE WASI)
+		target_compile_definitions(${TARGET_NAME} PRIVATE GHC_OS_DETECTED)
+		target_compile_definitions(${TARGET_NAME} PRIVATE GHC_OS_LINUX)
+	endif()
 endfunction()
 
 # Helper function to automatically set source groups for all source files
@@ -81,6 +87,10 @@ endif()
 
 if (WIN32)
 	target_link_libraries(armips PUBLIC shlwapi)
+endif()
+
+if (WASI)
+	target_include_directories(armips PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/wasix-stubs)
 endif()
 
 armips_target_sources(armips PRIVATE

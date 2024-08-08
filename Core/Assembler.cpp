@@ -148,7 +148,11 @@ bool runArmips(ArmipsArguments& settings)
 	Global.nocash = false;
 	Global.FileInfo.TotalLineCount = 0;
 	Global.relativeInclude = false;
-	Global.multiThreading = true;
+	#ifdef WASI
+		Global.multiThreading = false;
+	#else
+		Global.multiThreading = true;
+	#endif
 	Architecture::setCurrent(InvalidArchitecture);
 
 	Tokenizer::clearEquValues();

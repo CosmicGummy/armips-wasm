@@ -1,3 +1,15 @@
+# CosmicGummy Wasm additions
+
+Build with a wasix sdk system, such as [this docker image](https://github.com/CosmicGummy/wasix-sdk-docker).
+
+Then run:
+```
+mkdir out
+cd out
+cmake -DCMAKE_SYSROOT=/opt/wasix-sysroot -DCMAKE_TOOLCHAIN_FILE=/opt/wasix-sysroot/clang-wasix.cmake_toolchain -DCMAKE_BUILD_TYPE=Release -DWASI=1  ..
+cmake --build .
+```
+
 # armips assembler v0.11
 * Author: Kingcom
 * Source: https://github.com/Kingcom/armips

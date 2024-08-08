@@ -23,6 +23,16 @@ namespace fs
 	using ifstream = ghc::filesystem::ifstream;
 	using ofstream = ghc::filesystem::ofstream;
 	using fstream = ghc::filesystem::fstream;
+
+	#ifdef WASI
+		bool exists(const path &p);
+		path absolute(const path &p);
+		path current_path();
+		void current_path(const path &p);
+		void current_path(const path &p, std::error_code &errorCode);
+		uintmax_t file_size(const path &p);
+		uintmax_t file_size(const path &p, std::error_code &errorCode);
+	#endif
 }
 
 #endif
